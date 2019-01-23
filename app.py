@@ -20,16 +20,6 @@ scope = ('user-library-read '
          'user-read-playback-state '
          'user-modify-playback-state')
 
-token = prompt_for_user_token(
-    username,
-    scope,
-    client_id=client_id,
-    client_secret=client_secret,
-    redirect_uri=redirect_uri
-)
-
-sp = Spotify(auth=token)
-
 app = Flask(__name__)
 
 
@@ -38,6 +28,16 @@ def playlist_start():
     playlist_name = request.args.get('playlist_name')
     device_name = request.args.get('device_name')
     shuffle = int(request.args.get('shuffle', 0))
+
+    token = prompt_for_user_token(
+        username,
+        scope,
+        client_id=client_id,
+        client_secret=client_secret,
+        redirect_uri=redirect_uri
+    )
+
+    sp = Spotify(auth=token)
 
     playlist = next(
         playlist
