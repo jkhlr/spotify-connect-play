@@ -65,7 +65,7 @@ def playlist_start():
 
 
 @app.route('/spotify/pause/', methods=['GET'])
-def playlist_start():
+def playlist_pause():
     device_name = request.args.get('device_name')
 
     sp = get_spotify_api_instance()
