@@ -23,12 +23,7 @@ scope = ('user-library-read '
 app = Flask(__name__)
 
 
-@app.route('/spotify/playlist/', methods=['GET'])
-def playlist_start():
-    playlist_name = request.args.get('playlist_name')
-    device_name = request.args.get('device_name')
-    shuffle = int(request.args.get('shuffle', 0))
-
+def get_spotify_api_instance():
     token = prompt_for_user_token(
         username,
         scope,
@@ -37,7 +32,21 @@ def playlist_start():
         redirect_uri=redirect_uri
     )
 
-    sp = Spotify(auth=token)
+    return Spotify(auth=token)
+
+
+@app.route('/spotify/playlist/', methods=['GET'])
+def playlist_start():
+    playlist_name = request.args.get('playlist_name')
+    device_name = request.args.get('device_name')
+    shuffle = int(request.args.get('shuffle', 0))
+
+    sp = get_spotify_api_instance()
+    device = next(
+        device
+        for device in sp.devices()['devices']
+        if device['name'] == device_name
+    )
 
     playlist = next(
         playlist
@@ -49,16 +58,25 @@ def playlist_start():
     if shuffle:
         random.shuffle(track_uris)
 
+    sp.pause_playback(device_id=device['id'])
+    sp.start_playback(device_id=device['id'], uris=track_uris)
+
+    return "Playlist '{}' successfully started on '{}'.".format(playlist_name, device_name)
+
+
+@app.route('/spotify/pause/', methods=['GET'])
+def playlist_start():
+    device_name = request.args.get('device_name')
+
+    sp = get_spotify_api_instance()
     device = next(
         device
         for device in sp.devices()['devices']
         if device['name'] == device_name
     )
-
     sp.pause_playback(device_id=device['id'])
-    sp.start_playback(device_id=device['id'], uris=track_uris)
 
-    return "Playlist '{}' successfully started on '{}'.".format(playlist_name, device_name)
+    return "Playback on '{}' successfully paused.".format(device_name)
 
 
 if __name__ == '__main__':
