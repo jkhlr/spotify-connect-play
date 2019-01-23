@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import random, os
 from spotipy import Spotify
 from spotipy.util import prompt_for_user_token
