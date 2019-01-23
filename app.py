@@ -58,7 +58,7 @@ def playlist_start():
     sp.pause_playback(device_id=device['id'])
     sp.start_playback(device_id=device['id'], uris=track_uris)
 
-    return f"Playlist '{playlist_name}' successfully started on '{device_name}'."
+    return "Playlist '{}' successfully started on '{}'.".format(playlist_name, device_name)
 
 
 if __name__ == '__main__':
