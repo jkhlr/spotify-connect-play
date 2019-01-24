@@ -11,14 +11,15 @@ load_dotenv(env_path)
 
 client_secret = os.environ.get('CLIENT_SECRET')
 client_id = os.environ.get('CLIENT_ID')
-redirect_uri = os.environ.get('REDIRECT_URL')
+redirect_uri = os.environ.get('REDIRECT_URI')
 username = os.environ.get('USERNAME')
 
 scope = ('user-library-read '
          'playlist-read-private '
          'user-read-private '
          'user-read-playback-state '
-         'user-modify-playback-state')
+         'user-modify-playback-state '
+         'playlist-read-collaborative')
 
 app = Flask(__name__)
 
@@ -81,6 +82,7 @@ def playlist_pause():
 
 if __name__ == '__main__':
     app.run(host="localhost", port=8080)
+
 
 
 
